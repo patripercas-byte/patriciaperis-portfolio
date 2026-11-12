@@ -251,7 +251,7 @@ a:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
   .mk-grid .mk-c9{grid-column:1!important}
 }
   @media (max-width:820px){.view > section:first-child{padding-top:96px!important}}
-.f video[src*='connect-logo-puntos']{aspect-ratio:1600/450}.f video[src*='connect-hojas']{aspect-ratio:1080/1300}.f video[src*='liaison-spreads']{aspect-ratio:1600/1096}.f video[src*='liaison-manos']{aspect-ratio:1800/1200}
+.f video[src*='connect-logo']{aspect-ratio:1600/450}.f video[src*='connect-hojas']{aspect-ratio:1080/1300}.f video[src*='liaison-spreads']{aspect-ratio:1600/1096}.f video[src*='liaison-manos']{aspect-ratio:1800/1200}
 
 /* same project label on home and project page */
 .hlabel,.plabel{width:calc(160 * 100vw / 1400)!important;font-size:16px;line-height:normal;letter-spacing:normal}
@@ -866,7 +866,7 @@ a:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
   </section>
 
   <section class="f light" data-theme="light" style="--h:720">
-    <video class="p mult lgpan" id="lgpan" src="img/connect-logo-puntos.mp4" muted loop playsinline preload="auto" aria-label="Animación del logotipo CONNECT: los puntos aparecen poco a poco hasta formar el logotipo" style="--x:200;--y:100;--w:1000;height:auto;display:block"></video>
+    <video class="p mult lgpan" id="lgpan" src="img/connect-logo-v3.mp4" muted loop playsinline autoplay preload="auto" aria-label="Animación del logotipo CONNECT: los puntos aparecen poco a poco hasta formar el logotipo" style="--x:200;--y:100;--w:1000;height:auto;display:block"></video>
     <img class="p mult lgfull m-only" id="lgfull" src="img/connect-logo-puntos.jpg" alt="" aria-hidden="true" width="1600" height="450">
     <h3 class="p lead lg-tt" style="--x:246;--y:416;--w:360">Una identidad que nace de la propia conversación.</h3>
     <p class="p txt lg-tx" style="--x:640;--y:422;--w:520;--fs:15"><span class="d-only">El propio nombre habla de la naturaleza de la iniciativa: conectar mediante una conversación (cobra más sentido aún sabiendo que es una iniciativa que sobrevivió a la pandemia). La identidad visual habla de lo que ocurre de principio a fin en una conversación: al principio parece que los integrantes son de mundos distintos y no tienen mucho en común, pero poco a poco se forman vínculos y se comparten puntos de vista, lo que hace que acaben conectando. Además, esta propuesta visual también hace referencia al medio impreso, a la tinta de impresión y a cómo esta se expande al tocar el papel.</span><span class="m-only">El nombre resume la iniciativa: conectar a través de una conversación. Los puntos empiezan dispersos, como dos mundos que no tienen nada en común, y poco a poco se acercan hasta conectar. También evocan la tinta que se expande al tocar el papel.</span></p>
@@ -1513,12 +1513,20 @@ const EN_ART=["Original text by Patricia Peris based on David Sax’s ideas in <
   (function(){
     const v=document.getElementById('lgpan'); if(!v) return; const full=document.getElementById('lgfull');
     /* empieza desde el principio cuando la sección entra en pantalla, no antes */
-    new IntersectionObserver(es=>{ es.forEach(e=>{ if(e.isIntersecting){ if(v.paused){ try{v.currentTime=0;}catch(_){} v.play().catch(()=>{}); } } else { v.pause(); } }); },{threshold:.45}).observe(v);
+    /* si el navegador no deja reproducir el vídeo (p. ej. iPhone en modo ahorro), se muestra el logo completo; al tocar la pantalla se vuelve a intentar */
+    let fb=false, chk=0;
+    const fallback=()=>{ if(v.currentTime>.05 && !v.paused) return; fb=true; v.poster='img/connect-logo-puntos.jpg'; if(!mq.matches) v.style.opacity=''; };
+    const tryPlay=()=>{ const r=v.play(); if(r&&r.catch) r.catch(fallback); clearTimeout(chk); chk=setTimeout(fallback,1600); };
+    v.addEventListener('playing',()=>{ if(fb){ fb=false; } clearTimeout(chk); });
+    ['touchstart','click'].forEach(ev=>addEventListener(ev,()=>{ if(fb && v.paused && v.getBoundingClientRect().top<innerHeight && v.getBoundingClientRect().bottom>0){ try{v.currentTime=0;}catch(_){} v.play().catch(()=>{}); } },{passive:true}));
+    v.pause();
+    new IntersectionObserver(es=>{ es.forEach(e=>{ if(e.isIntersecting){ if(v.paused){ try{v.currentTime=0;}catch(_){} tryPlay(); } } else { v.pause(); clearTimeout(chk); } }); },{threshold:.25}).observe(v);
     /* móvil: "Dos papeles" arranca sobre papel claro */
     const dp=document.querySelector('.dp'), dp1=dp&&dp.querySelector('img'); const setDp=()=>{ if(!dp) return; if(mq.matches && setDp.w!==innerWidth && dp1.offsetHeight){ setDp.w=innerWidth; dp.style.removeProperty('--dpb'); const need=innerHeight-(dp1.getBoundingClientRect().bottom-dp.getBoundingClientRect().top); dp.style.setProperty('--dpb',Math.max(36,need+16)+'px'); } dp.dataset.theme=(mq.matches && dp1.getBoundingClientRect().bottom>56)?'light':'dark'; }; setDp(); addEventListener('scroll',setDp,{passive:true}); addEventListener('resize',setDp); if(dp1){ dp1.addEventListener('load',()=>{setDp.w=0;setDp();}); } addEventListener('hashchange',()=>setTimeout(()=>{setDp.w=0;setDp();},400)); setTimeout(()=>{setDp.w=0;setDp();},800);
     const ease=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
     function tick(){
-      if(mq.matches && !v.closest('.view').hidden){
+      if(mq.matches && !v.closest('.view').hidden && fb){ full.style.opacity='1'; v.style.opacity='0'; }
+      else if(mq.matches && !v.closest('.view').hidden){
         const t=v.currentTime, p=ease(Math.max(0,Math.min(1,(t-.15)/3.85)));
         /* encuadre: de la C centrada a la T centrada */
         const cw=v.clientWidth, Wv=v.clientHeight*1600/450, X=f=>Math.max(0,Math.min(1,(cw/2-f*Wv)/(cw-Wv)));
