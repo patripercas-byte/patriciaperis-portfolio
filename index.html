@@ -1732,6 +1732,7 @@ const EN_ART=["Original text by Patricia Peris based on David Sax’s ideas in <
       document.documentElement.lang=l;
       btns.forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===l?'true':'false'));
       const c=document.getElementById('copy'); if(c) c.textContent=l==='en'?'Copy email':'Copiar email';
+      document.querySelectorAll('a.ab-cv').forEach(a=>a.setAttribute('href',l==='en'?'img/cv_patriciaperis_en.pdf':'img/cv_patriciaperis.pdf'));
       if(window.__ixRender) window.__ixRender();
       if(save) try{localStorage.setItem('pp-lang',l);}catch(e){}
       requestAnimationFrame(()=>{layout();onScroll();});
