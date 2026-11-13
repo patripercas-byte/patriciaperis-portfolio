@@ -1097,7 +1097,7 @@ a:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
         <p>En el bachillerato británico estudié sociología y psicología, y desde entonces me fijo mucho en cómo aparecen en el diseño y en la publicidad. Me parecen clave para entender a las personas a las que te diriges.</p>
         <p>Soy licenciada en Diseño por la Universidad Francisco de Vitoria (UFV) y estoy terminando Publicidad dentro del mismo doble grado. Hablo español e inglés, y me defiendo en francés y alemán.</p>
         <p>Uso la IA en mi día a día; de hecho, esta web la he programado con su ayuda. Pero también me interesa mucho su parte ética: qué papel tiene, cómo influye en lo profesional y en lo personal, y cómo está cambiando nuestra forma de trabajar. Por eso intento no quedarme quieta y seguir informándome.</p>
-        <p><a class="ab-cv" href="img/cv_patriciaperis.pdf" target="_blank" rel="noopener">Descargar CV (PDF)</a></p>
+        <p><a class="ab-cv" href="img/cv-patricia-peris-es.pdf" target="_blank" rel="noopener">Descargar CV (PDF)</a></p>
       </div>
     </div>
   </section>
@@ -1732,7 +1732,7 @@ const EN_ART=["Original text by Patricia Peris based on David Sax’s ideas in <
       document.documentElement.lang=l;
       btns.forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===l?'true':'false'));
       const c=document.getElementById('copy'); if(c) c.textContent=l==='en'?'Copy email':'Copiar email';
-      document.querySelectorAll('a.ab-cv').forEach(a=>a.setAttribute('href',l==='en'?'img/cv_patriciaperis_en.pdf':'img/cv_patriciaperis.pdf'));
+      document.querySelectorAll('a.ab-cv').forEach(a=>a.setAttribute('href',l==='en'?'img/cv-patricia-peris-en.pdf':'img/cv-patricia-peris-es.pdf'));
       if(window.__ixRender) window.__ixRender();
       if(save) try{localStorage.setItem('pp-lang',l);}catch(e){}
       requestAnimationFrame(()=>{layout();onScroll();});
